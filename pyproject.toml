@@ -1,0 +1,20 @@
+[tool.poetry]
+name = "airnominal2.0"
+version = "0.1.0"
+description = ""
+authors = ["Your Name <you@example.com>"]
+
+[tool.poetry.dependencies]
+python = "^3.10"
+fastapi = {extras = ["all"], version = "^0.92.0"}
+fastapi-sso = "^0.6.4"
+pymongo = {extras = ["src"], version = "^4.3.3"}
+
+[tool.poetry.dev-dependencies]
+uvicorn = "^0.20.0"
+SQLAlchemy = "^2.0.4"
+pydruid = "^0.6.5"
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"
