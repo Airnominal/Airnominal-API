@@ -1,25 +1,25 @@
-import os, configparser
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
-config = configparser.ConfigParser()
-config.read("../../" + os.environ['CONFIG_FILE'])
 
 #config for github SSO
-CLIENT_ID = config.get("GITHUB", "Client_id")
-CLIENT_SECRET = config.get("GITHUB", "Client_Secret")
-redirect_url = config.get("GITHUB", "Redirect_uri")
+CLIENT_ID = os.getenv("AIRNOMINAL_GITHUB_CLIENT_ID")
+CLIENT_SECRET = os.getenv("AIRNOMINAL_GITHUB_CLIENT_SECRET")
+redirect_url = os.getenv("AIRNOMINAL_GITHUB_REDIRECT_URL")
 
 #config for jwt generation
-SECRET_KEY = config.get("JWT", "Secret_key")
-ALGORITHM = config.get("JWT", "Algorithm") 
-ACCESS_TOKEN_EXPIRE_MINUTES = int(config.get("JWT", "Access_token_expire_minutes"))
+SECRET_KEY = os.getenv("AIRNOMINAL_JWT_SECRET_KEY")
+ALGORITHM = os.getenv("AIRNOMINAL_JWT_ALGORITHM")
+ACCESS_TOKEN_EXPIRE_MINUTES = int(os.getenv("AIRNOMINAL_JWT_TOKEN_EXPIRES"))
 
-bucket = config.get("INFLUX", "Bucket")
-org = config.get("INFLUX", "Org")
-token = config.get("INFLUX", "Token")
-influx_url = config.get("INFLUX", "url")
+bucket = os.getenv("AIRNOMINAL_INFLUX_BUCKET")
+org = os.getenv("AIRNOMINAL_INFLUX_ORG")
+token = os.getenv("AIRNOMINAL_INFLUX_TOKEN")
+influx_url = os.getenv("AIRNOMINAL_INFLUX_URL")
 
-mongo_url = config.get("MONGO", "url")
-port = int(config.get("MONGO", "port"))
-username = config.get("MONGO", "username")
-password = config.get("MONGO", "password")
+mongo_url = os.getenv("AIRNOMINAL_MONGO_URL")
+port = int(os.getenv("AIRNOMINAL_MONGO_PORT"))
+username = os.getenv("AIRNOMINAL_MONGO_USERNAME")
+password = os.getenv("AIRNOMINAL_MONGO_PASSWORD")
