@@ -8,6 +8,7 @@ load_dotenv()
 CLIENT_ID = os.getenv("AIRNOMINAL_GITHUB_CLIENT_ID")
 CLIENT_SECRET = os.getenv("AIRNOMINAL_GITHUB_CLIENT_SECRET")
 redirect_url = os.getenv("AIRNOMINAL_GITHUB_REDIRECT_URL")
+redirect_url_main_page = os.getenv("AIRNMONIAL_MAIN_PAGE_REDIRECT_URL")
 
 #config for jwt generation
 SECRET_KEY = os.getenv("AIRNOMINAL_JWT_SECRET_KEY")

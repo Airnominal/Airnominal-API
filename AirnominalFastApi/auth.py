@@ -6,8 +6,8 @@ from pydantic import BaseModel
 from fastapi_sso.sso.github import GithubSSO
 from datetime import datetime, timedelta
 from fastapi import FastAPI, Request, Depends, HTTPException, APIRouter, Response
-from config import CLIENT_ID, CLIENT_SECRET, redirect_url, SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES
-
+from config import CLIENT_ID, CLIENT_SECRET, redirect_url, SECRET_KEY, ALGORITHM, ACCESS_TOKEN_EXPIRE_MINUTES, redirect_url_main_page
+from fastapi.responses import RedirectResponse
 router = APIRouter()
 
 
@@ -65,7 +65,7 @@ async def auth_callback(request: Request, response: Response):
     )
     print(dict(user))
     response.set_cookie("Authorization", access_token)
-    return {"access_token": access_token, "token_type": "bearer"}
+    return RedirectResponse(redirect_url_main_page)
 
 @router.get("/auth/logout")
 async def auth_logout(response: Response):
