@@ -64,8 +64,9 @@ async def auth_callback(request: Request, response: Response):
         data=dict(user), expires_delta=access_token_expires
     )
     print(dict(user))
+    response = RedirectResponse(redirect_url_main_page)
     response.set_cookie("Authorization", access_token)
-    return RedirectResponse(redirect_url_main_page)
+    return response
 
 @router.get("/auth/logout")
 async def auth_logout(response: Response):
