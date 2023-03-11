@@ -19,7 +19,7 @@ jobs:
   release:
     name: Release Docker
     runs-on: ubuntu-latest
-    if: github.ref == "refs/heads/main"
+    if: github.ref == 'refs/heads/main'
 
     permissions:
       contents: read
