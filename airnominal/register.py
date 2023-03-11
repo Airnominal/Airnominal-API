@@ -6,9 +6,9 @@ import secrets
 
 from fastapi import Depends, HTTPException, APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
-from auth import security, has_access_and_get_user
+from .auth import security, has_access_and_get_user
 import uuid
-from mongo import stations
+from .mongo import stations
 from typing import Union
 router = APIRouter()
 

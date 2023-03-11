@@ -1,5 +1,5 @@
 from pymongo import MongoClient
-from config import mongo_url, port, username, password
+from .config import mongo_url, port, username, password
 
 client = MongoClient(mongo_url, port, username=username, password=password)
 
