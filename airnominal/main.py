@@ -7,9 +7,9 @@ from influxdb_client.client.write_api import SYNCHRONOUS
 
 
 
-from auth import router as auth_router
-from register import router as register_router
-from data_endpoint import router as data_router
+from .auth import router as auth_router
+from .register import router as register_router
+from .data_endpoint import router as data_router
 
 #config for influx-db
 bucket = "Airnominal-data2"

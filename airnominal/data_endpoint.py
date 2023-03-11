@@ -6,12 +6,12 @@ from typing import List
 
 from fastapi import Depends, HTTPException, APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
-from auth import security, has_access_and_get_user
+from .auth import security, has_access_and_get_user
 import uuid
-from mongo import stations
+from .mongo import stations
 router = APIRouter()
 from pydantic import BaseModel
-from influx import writeJsonToInflux
+from .influx import writeJsonToInflux
 
 
 """

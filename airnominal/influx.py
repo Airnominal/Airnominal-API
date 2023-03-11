@@ -1,7 +1,7 @@
 import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
-from config import bucket, org, token
-from config import influx_url as url
+from .config import bucket, org, token
+from .config import influx_url as url
 
 client = influxdb_client.InfluxDBClient(
     url=url,
