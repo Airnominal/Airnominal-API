@@ -35,7 +35,7 @@ jobs:
         with:
           images: ghcr.io/airnominal/backend
           tags: |
-            type=schedule,pattern={{date 'YYYYMMDDhhmmss'}},event=branch
+            type=raw,value={{date 'YYYYMMDDhhmmss'}}
             type=raw,value=latest
 
       - name: Login to the Container registry

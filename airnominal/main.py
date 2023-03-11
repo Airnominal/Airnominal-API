@@ -6,7 +6,7 @@ import influxdb_client
 from influxdb_client.client.write_api import SYNCHRONOUS
 
 
-
+from .config import api_root_path
 from .auth import router as auth_router
 from .register import router as register_router
 from .data_endpoint import router as data_router
@@ -25,7 +25,7 @@ client = influxdb_client.InfluxDBClient(
 
 write_api = client.write_api(write_options=SYNCHRONOUS)
 
-app = FastAPI()
+app = FastAPI(root_path=api_root_path)
 app.include_router(auth_router)
 app.include_router(register_router)
 app.include_router(data_router)

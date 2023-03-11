@@ -24,3 +24,5 @@ mongo_url = os.getenv("AIRNOMINAL_MONGO_URL")
 port = int(os.getenv("AIRNOMINAL_MONGO_PORT"))
 username = os.getenv("AIRNOMINAL_MONGO_USERNAME")
 password = os.getenv("AIRNOMINAL_MONGO_PASSWORD")
+
+api_root_path = os.getenv("AIRNOMINAL_ROOT_PATH") or ""
