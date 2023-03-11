@@ -1,21 +1,29 @@
-FROM python:slim
+FROM python:slim AS python
 
-# Keeps Python from generating .pyc files in the container
-ENV PYTHONDONTWRITEBYTECODE 1
-# Turns off buffering for easier container logging
-ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
-# Install and setup poetry
-RUN pip install -U pip \
-    && apt-get update \
-    && apt install -y curl netcat \
-    && curl -sSL https://install.python-poetry.org | python -
-ENV PATH="${PATH}:/root/.local/bin"
+ENV POETRY_HOME=/opt/poetry
+ENV VENV_HOME=/usr/src/app/.venv
+ENV PATH="$POETRY_HOME/bin:$VENV_HOME/bin:$PATH"
 
 WORKDIR /usr/src/app
+
+# Install and setup Poetry
+FROM python AS poetry
+
+ENV POETRY_NO_INTERACTION=1
+ENV POETRY_VIRTUALENVS_IN_PROJECT=1
+
+RUN python -c 'from urllib.request import urlopen; print(urlopen("https://install.python-poetry.org").read().decode())' | python -
+
+COPY pyproject.toml poetry.lock ./
+RUN poetry install --without dev
+
+# Prepare and run app
+FROM python AS runtime
+
+COPY --from=poetry $VENV_HOME $VENV_HOME
 COPY . .
-RUN poetry config virtualenvs.create false \
-  && poetry install --no-interaction --no-ansi
-WORKDIR /usr/src/app/AirnominalFastApi
-CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "80"]
-EXPOSE 80
+
+CMD ["uvicorn", "airnominal:app", "--host", "0.0.0.0", "--port", "80", "--proxy-headers"]
