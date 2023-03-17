@@ -6,7 +6,7 @@ from typing import List
 
 from fastapi import Depends, HTTPException, APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
-from .auth import security, has_access_and_get_user
+from .auth import get_current_user
 import uuid
 from .mongo import stations, tokens
 router = APIRouter()
@@ -105,7 +105,7 @@ def influxDataTransformer(parsed_object):
                     "station_name": station["station_name"],
                     "sensor_id": sensor["sensor_id"],
                     "sensor_name": sensor["sensor_name"],
-                    "display_quantity": sensor["quantity"] + "(" + sensor["unit"] + ")",
+                    "display_quantity": sensor["quantity"] + " (" + sensor["unit"] + ")",
                     "quantity": sensor["quantity"],
                     "unit": sensor["unit"]
             },

@@ -6,7 +6,7 @@ import secrets
 
 from fastapi import Depends, HTTPException, APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
-from .auth import security, has_access_and_get_user
+from .auth import get_current_user
 import uuid
 from .mongo import stations, tokens
 from typing import Union
@@ -21,6 +21,8 @@ class RegisterStation(BaseModel):
     station_name: str
     sensors: List[RegisterSensor]
 
+class RegenrateToken(BaseModel):
+    station_id: str
 
 def generate_strings():
     used_strings = set()
@@ -36,9 +38,9 @@ def generate_password():
     return password
 
 @router.post("/register")
-async def register(register: RegisterStation, credentials: HTTPAuthorizationCredentials= Depends(security)):
+async def register(register: RegisterStation, user = Depends(get_current_user)):
     gen = generate_strings()
-    user = has_access_and_get_user(credentials)
+    
 
     reg = dict(register)
     tok = {}
@@ -62,16 +64,15 @@ async def register(register: RegisterStation, credentials: HTTPAuthorizationCred
     return rtn
 
 @router.get("/my_stations")
-async def get_my_stations(credentials: HTTPAuthorizationCredentials= Depends(security)):
-    user = has_access_and_get_user(credentials)
+async def get_my_stations(user = Depends(get_current_user)):
     print(stations.find({"owner_id" : user["id"]}))
     return [station for station in stations.find({"owner_id" : user["id"]}, {'_id': 0})]
 
 class DeleteStation(BaseModel):
     id: str
 @router.post("/delete_station")
-async def delete_station(item: DeleteStation, credentials: HTTPAuthorizationCredentials= Depends(security)):
-    user = has_access_and_get_user(credentials)
+async def delete_station(item: DeleteStation, user = Depends(get_current_user)):
+    
     station = stations.delete_one({"station_id": item.id, "owner_id": user["id"]})
     return True
     
