@@ -8,7 +8,7 @@ from fastapi import Depends, HTTPException, APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
 from .auth import security, has_access_and_get_user
 import uuid
-from .mongo import stations
+from .mongo import stations, tokens
 from typing import Union
 router = APIRouter()
 
@@ -41,8 +41,9 @@ async def register(register: RegisterStation, credentials: HTTPAuthorizationCred
     user = has_access_and_get_user(credentials)
 
     reg = dict(register)
-    reg["station_id"] = str(uuid.uuid4())
-    reg["token"] = generate_password()
+    tok = {}
+    reg["station_id"] = tok["station_id"] = str(uuid.uuid4())
+    tok["token"] = generate_password()
     reg["lon"] = None
     reg["lat"] = None
     reg["updated"] = None
@@ -54,7 +55,9 @@ async def register(register: RegisterStation, credentials: HTTPAuthorizationCred
     reg["owner_name"] = user["display_name"]
     
     stations.insert_one(reg)
+    tokens.insert_one(tok)
     rtn = reg.copy()
+    rtn["token"] = tok["token"]
     rtn["_id"] = str(rtn["_id"])
     return rtn
 

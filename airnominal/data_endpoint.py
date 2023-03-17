@@ -8,7 +8,7 @@ from fastapi import Depends, HTTPException, APIRouter
 from fastapi.security import HTTPAuthorizationCredentials
 from .auth import security, has_access_and_get_user
 import uuid
-from .mongo import stations
+from .mongo import stations, tokens
 router = APIRouter()
 from pydantic import BaseModel
 from .influx import writeJsonToInflux
@@ -91,6 +91,9 @@ p = influxdb_client.Point("data").from_dict(
 def influxDataTransformer(parsed_object):
     query = {"station_id": parsed_object["station_id"]}
     station = stations.find_one(query)
+    token = tokens.find_one(query)
+    if parsed_object["token"] != token["token"]:
+        return False
     for point in parsed_object["data"]:
         sensor = [sen for sen in station["sensors"] if sen["short_id"] == point["short_id"]][0]
         writeJsonToInflux({
