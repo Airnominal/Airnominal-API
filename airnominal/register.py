@@ -40,8 +40,6 @@ def generate_password():
 @router.post("/register")
 async def register(register: RegisterStation, user = Depends(get_current_user)):
     gen = generate_strings()
-    
-
     reg = dict(register)
     tok = {}
     reg["station_id"] = tok["station_id"] = str(uuid.uuid4())
@@ -70,9 +68,9 @@ async def get_my_stations(user = Depends(get_current_user)):
 
 class DeleteStation(BaseModel):
     id: str
+
 @router.post("/delete_station")
 async def delete_station(item: DeleteStation, user = Depends(get_current_user)):
-    
     station = stations.delete_one({"station_id": item.id, "owner_id": user["id"]})
     return True
     

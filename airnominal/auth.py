@@ -18,18 +18,15 @@ from fastapi.openapi.docs import get_swagger_ui_html
 from fastapi.openapi.models import OAuthFlows as OAuthFlowsModel
 from fastapi.openapi.utils import get_openapi
 from typing import Optional
-from json import dumps
 from starlette.status import HTTP_403_FORBIDDEN
 from starlette.responses import RedirectResponse, Response, JSONResponse
 from starlette.requests import Request
+from fastapi.responses import RedirectResponse
 
 router = APIRouter()
 
-
 #config for github SSO
 os.environ["OAUTHLIB_INSECURE_TRANSPORT"] = "1"
-
-
 
 sso = GithubSSO(
     client_id=CLIENT_ID,
@@ -149,21 +146,6 @@ async def get_current_user(token: str = Depends(oauth2_scheme)):
     except PyJWTError:
         raise credentials_exception
 
-def has_access_and_get_user(credentials: HTTPAuthorizationCredentials):
-    """
-        Function that is used to validate the token in the case that it requires it
-    """
-    try:
-        token = credentials.credentials
-        payload = jwt.decode(token, key='secret', options={"verify_signature": False,
-                                                           "verify_aud": False,
-                                                           "verify_iss": False})
-        return payload
-    except JOSEError as e:
-        raise HTTPException(
-            status_code=401,
-            detail=str(e))
-
 @router.get("/auth/login")
 async def auth_init():
     """Initialize auth and redirect"""
@@ -178,8 +160,7 @@ async def auth_callback(request: Request, response: Response):
         data=dict(user), expires_delta=access_token_expires
     )
     print(dict(user))
-    headers = {'Location': redirect_url_main_page}
-    response = Response(content=dumps({"token": access_token}), headers=headers, status_code=status.HTTP_307_TEMPORARY_REDIRECT)
+    response = RedirectResponse(redirect_url_main_page)
     response.set_cookie(
             "Authorization",
             value=f"Bearer {access_token}",
