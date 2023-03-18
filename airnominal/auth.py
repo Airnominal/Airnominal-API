@@ -152,7 +152,7 @@ async def auth_init():
     return await sso.get_login_redirect()
 
 @router.get("/auth/callback")
-async def auth_callback(request: Request, response: Response):
+async def auth_callback(request: Request):
     """Verify login"""
     user = await sso.verify_and_process(request)
     access_token_expires = timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
@@ -171,6 +171,15 @@ async def auth_callback(request: Request, response: Response):
     return response
 
 @router.get("/auth/logout")
-async def auth_logout(response: Response):
+async def auth_logout():
+    response = RedirectResponse(redirect_url_main_page)
     response.delete_cookie("Authorization")
-    return True
+    return response
+
+@router.get("/auth/status")
+async def auth_status(user=Depends(get_current_user)):
+    return {
+        "ok": True,
+        "user": user,
+    }
+
