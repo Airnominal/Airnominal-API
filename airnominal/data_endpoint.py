@@ -116,7 +116,8 @@ def influxDataTransformer(parsed_object):
                 "value": point["data"]
             }
         })
-    update = {"$set" : {"lat": parsed_object["lat"], "lon": parsed_object["lon"], "updated": parsed_object["time"]}}
+    time = datetime.datetime.fromisoformat(parsed_object["time"] + "+00:00")
+    update = {"$set" : {"lat": parsed_object["lat"], "lon": parsed_object["lon"], "updated": time}}
     stations.update_one(query, update)
 
 
