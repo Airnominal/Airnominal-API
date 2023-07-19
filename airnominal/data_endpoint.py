@@ -46,7 +46,10 @@ def dataParser(raw: str):
         sensor_data = []
         for i in range(7, len(data), 2):
             sen = data[i]
-            dat = float(data[i+1])
+            try:
+                dat = float(data[i+1])
+            except: 
+                dat = str(data[i+1])
             sensor_data.append({
                 "short_id": sen,
                 "data": dat
